@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Корочки.есть — Онлайн курсы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --accent: #3b82f6;
+            --accent-hover: #2563ed;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --accent: #60a5fa;
+            --accent-hover: #3b82f6;
+            --border: #334155;
+        }
+
+        body {
+            font-family: system-ui, 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--accent)10, transparent);
+            border-radius: 24px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h2 span {
+            color: var(--accent);
+        }
+
+        .btn {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Слайдер */
+        .slider-section {
+            margin: 3rem 0;
+        }
+
+        .slider-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slider-viewport {
+            flex: 1;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+
+        .slide-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .slider-arrow {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--accent);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        .features {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-card {
+            flex: 1;
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .form-card, .auth-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .apps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .app-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-new { background: #fef3c7; color: #92400e; }
+        .status-learning { background: #dbeafe; color: #1e40af; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+
+        body.dark .status-new { background: #451a03; color: #fcd34d; }
+        body.dark .status-learning { background: #1e3a5f; color: #93c5fd; }
+        body.dark .status-completed { background: #064e3b; color: #6ee7b7; }
+
+        .admin-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-filters input, .admin-filters select {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; }
+            .features { flex-direction: column; }
+            .slide img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h1>Корочки.<span>есть</span></h1>
+        </div>
+        <nav class="nav">
+            <a class="nav-link" data-page="home">Главная</a>
+            <a class="nav-link" data-page="applications" id="navApps">Мои заявки</a>
+            <a class="nav-link" data-page="new-application" id="navNew">Новая заявка</a>
+            <a class="nav-link" data-page="admin" id="navAdmin">Админ панель</a>
+        </nav>
+        <div class="user-panel">
+            <span id="userDisplay"><i class="fas fa-user"></i> Гость</span>
+            <button id="logoutBtn" class="icon-btn" style="display:none">Выйти</button>
+            <button id="themeBtn" class="icon-btn">🌙</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Главная страница -->
+        <div id="home-page" class="page active-page">
+            <div class="hero">
+                <h2>Повышай квалификацию с <span>Корочки.есть</span></h2>
+                <p>Онлайн-курсы ДПО с гарантией качества</p>
+                <button class="btn btn-primary" id="heroBtn">Начать обучение →</button>
+            </div>
+            <div class="slider-section">
+                <h3><i class="fas fa-images"></i> Наши направления</h3>
+                <div class="slider-container">
+                    <button class="slider-arrow prev" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slider-viewport">
+                        <div class="slider-track" id="sliderTrack">
+                            <div class="slide"><img src="https://picsum.photos/id/1/800/400" alt="Программирование"><div class="slide-title">Программирование</div></div>
+                            <div class="slide"><img src="https://picsum.photos/id/20/800/400" alt="Веб-дизайн"><div class="slide-title">Веб-дизайн</div></div>
+                            <div class="slide"><img src="https://picsum.photos/id/26/800/400" alt="Базы данных"><div class="slide-title">Базы данных</div></div>
+                            <div class="slide"><img src="https://picsum.photos/id/91/800/400" alt="Fullstack"><div class="slide-title">Fullstack</div></div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+            <div class="features">
+                <div class="feature-card"><i class="fas fa-chalkboard-user"></i><h4>Опытные преподаватели</h4><p>Практикующие эксперты</p></div>
+                <div class="feature-card"><i class="fas fa-certificate"></i><h4>Официальный диплом</h4><p>Гос. образца</p></div>
+                <div class="feature-card"><i class="fas fa-headset"></i><h4>Поддержка 24/7</h4><p>Всегда на связи</p></div>
+            </div>
+        </div>
+
+        <!-- Мои заявки -->
+        <div id="applications-page" class="page">
+            <h2>Мои заявки</h2>
+            <div id="applicationsContainer" class="apps-grid"></div>
+        </div>
+
+        <!-- Новая заявка -->
+        <div id="new-application-page" class="page">
+            <h2>Новая заявка на курс</h2>
+            <div class="form-card">
+                <form id="applicationForm">
+                    <div class="form-group">
+                        <label>Наименование курса *</label>
+                        <select id="courseSelect" required>
+                            <option value="">Выберите курс</option>
+                            <option value="Основы алгоритмизации и программирования">Основы алгоритмизации и программирования</option>
+                            <option value="Основы веб-дизайна">Основы веб-дизайна</option>
+                            <option value="Основы проектирования баз данных">Основы проектирования баз данных</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Желаемая дата начала *</label>
+                        <input type="text" id="dateInput" placeholder="ДД.ММ.ГГГГ">
+                        <small>Формат: 25.12.2025</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Способ оплаты *</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="payment" value="Наличными" checked> Наличными</label>
+                            <label><input type="radio" name="payment" value="Перевод по номеру телефона"> Перевод по телефону</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Отправить заявку</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Админ панель -->
+        <div id="admin-page" class="page">
+            <h2>Панель администратора</h2>
+            <div class="admin-filters">
+                <input type="text" id="adminSearch" placeholder="Поиск по студенту или курсу...">
+                <select id="adminStatusFilter">
+                    <option value="all">Все статусы</option>
+                    <option value="Новая">Новая</option>
+                    <option value="Идет обучение">Идет обучение</option>
+                    <option value="Обучение завершено">Обучение завершено</option>
+                </select>
+                <button id="adminRefreshBtn" class="btn btn-primary">Обновить</button>
+            </div>
+            <div id="adminContainer" class="apps-grid"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Корочки.есть — Онлайн курсы ДПО</p>
+    </footer>
+</div>
+
+<!-- Модальное окно отзыва -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3>Оставить отзыв</h3>
+        <textarea id="reviewInput" rows="5" placeholder="Поделитесь впечатлениями..."></textarea>
+        <button id="sendReviewBtn" class="btn btn-primary">Отправить</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script>
+    // ========== ХРАНИЛИЩЕ ==========
+    let currentUser = null;
+
+    function initStorage() {
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([
+                { id: 1, login: 'Admin', password: 'KorokNET', fullname: 'Администратор', phone: '8(999)999-99-99', email: 'admin@koroki.est', role: 'admin' }
+            ]));
+        }
+        if (!localStorage.getItem('applications')) localStorage.setItem('applications', '[]');
+    }
+
+    function getUsers() { return JSON.parse(localStorage.getItem('users')); }
+    function getApps() { return JSON.parse(localStorage.getItem('applications')); }
+    function saveApps(apps) { localStorage.setItem('applications', JSON.stringify(apps)); }
+
+    // Валидация
+    function validateLogin(login) { return /^[a-zA-Z0-9]{6,}$/.test(login); }
+    function validatePassword(pwd) { return pwd.length >= 8; }
+    function validateFullname(name) { return /^[а-яА-ЯёЁ\s]+$/.test(name); }
+    function validatePhone(phone) { return /^8\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(phone); }
+    function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+    function validateDate(date) { return /^\d{2}\.\d{2}\.\d{4}$/.test(date); }
+
+    function register(login, pass, fullname, phone, email) {
+        let users = getUsers();
+        if (users.find(u => u.login === login)) return { ok: false, error: 'Логин уже существует' };
+        if (!validateLogin(login)) return { ok: false, error: 'Логин: латиница/цифры, 6+ символов' };
+        if (!validatePassword(pass)) return { ok: false, error: 'Пароль: минимум 8 символов' };
+        if (!validateFullname(fullname)) return { ok: false, error: 'ФИО: только кириллица' };
+        if (!validatePhone(phone)) return { ok: false, error: 'Телефон: 8(XXX)XXX-XX-XX' };
+        if (!validateEmail(email)) return { ok: false, error: 'Неверный email' };
+        users.push({ id: Date.now(), login, password: pass, fullname, phone, email, role: 'user' });
+        localStorage.setItem('users', JSON.stringify(users));
+        return { ok: true };
+    }
+
+    function loginUser(login, pass) {
+        let users = getUsers();
+        let user = users.find(u => u.login === login && u.password === pass);
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            return { ok: true };
+        }
+        return { ok: false, error: 'Неверный логин или пароль' };
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        updateUI();
+        showPage('home');
+    }
+
+    function createApp(userId, course, date, payment) {
+        if (!validateDate(date)) return { ok: false, error: 'Дата должна быть в формате ДД.ММ.ГГГГ' };
+        let apps = getApps();
+        apps.push({ id: Date.now(), userId, courseName: course, startDate: date, paymentMethod: payment, status: 'Новая', reviewGiven: false });
+        saveApps(apps);
+        return { ok: true };
+    }
+
+    function getUserApps(userId) { return getApps().filter(a => a.userId === userId); }
+    function getAllApps() { return getApps(); }
+
+    function updateStatus(appId, newStatus) {
+        let apps = getApps();
+        let idx = apps.findIndex(a => a.id === appId);
+        if (idx !== -1) { apps[idx].status = newStatus; saveApps(apps); }
+    }
+
+    function addReview(userId, appId, text) {
+        if (!text.trim()) return false;
+        let apps = getApps();
+        let app = apps.find(a => a.id === appId);
+        if (app && app.userId === userId && app.status === 'Обучение завершено' && !app.reviewGiven) {
+            app.reviewGiven = true;
+            saveApps(apps);
+            return true;
+        }
+        return false;
+    }
+
+    // UI обновление
+    function updateUI() {
+        let saved = localStorage.getItem('currentUser');
+        if (saved) currentUser = JSON.parse(saved);
+        let userSpan = document.getElementById('userDisplay');
+        let logoutBtn = document.getElementById('logoutBtn');
+        let navApps = document.getElementById('navApps');
+        let navNew = document.getElementById('navNew');
+        let navAdmin = document.getElementById('navAdmin');
+        if (currentUser) {
+            userSpan.innerHTML = `<i class="fas fa-user"></i> ${currentUser.fullname}`;
+            logoutBtn.style.display = 'inline-block';
+            navApps.style.display = 'inline-block';
+            navNew.style.display = 'inline-block';
+            navAdmin.style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
+        } else {
+            userSpan.innerHTML = `<i class="fas fa-user"></i> Гость`;
+            logoutBtn.style.display = 'none';
+            navApps.style.display = 'none';
+            navNew.style.display = 'none';
+            navAdmin.style.display = 'none';
+        }
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+        document.getElementById(`${pageId}-page`).classList.add('active-page');
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.page === pageId);
+        });
+        if (pageId === 'applications') renderUserApps();
+        if (pageId === 'admin') renderAdminApps();
+    }
+
+    // Отображение заявок пользователя
+    function renderUserApps() {
+        let container = document.getElementById('applicationsContainer');
+        if (!currentUser) { container.innerHTML = '<div class="empty">Авторизуйтесь</div>'; return; }
+        let apps = getUserApps(currentUser.id);
+        if (!apps.length) { container.innerHTML = '<div class="empty">У вас нет заявок</div>'; return; }
+        container.innerHTML = apps.map(app => {
+            let statusClass = app.status === 'Новая' ? 'status-new' : (app.status === 'Идет обучение' ? 'status-learning' : 'status-completed');
+            let reviewBtn = (app.status === 'Обучение завершено' && !app.reviewGiven) ? `<button class="btn btn-primary review-trigger" data-id="${app.id}" style="margin-top:10px">📝 Оставить отзыв</button>` : '';
+            return `<div class="app-card">
+                        <div><strong>📚 Курс:</strong> ${app.courseName}</div>
+                        <div><strong>📅 Дата:</strong> ${app.startDate}</div>
+                        <div><strong>💳 Оплата:</strong> ${app.paymentMethod}</div>
+                        <div><strong>📊 Статус:</strong> <span class="status ${statusClass}">${app.status}</span></div>
+                        ${reviewBtn}
+                    </div>`;
+        }).join('');
+        document.querySelectorAll('.review-trigger').forEach(btn => {
+            btn.addEventListener('click', () => openReviewModal(parseInt(btn.dataset.id)));
+        });
+    }
+
+    let currentReviewApp = null;
+    function openReviewModal(id) { currentReviewApp = id; document.getElementById('reviewModal').classList.add('active'); }
+    function closeReviewModal() { document.getElementById('reviewModal').classList.remove('active'); currentReviewApp = null; }
+
+    function submitReview() {
+        let text = document.getElementById('reviewInput').value;
+        if (text && currentReviewApp && currentUser) {
+            if (addReview(currentUser.id, currentReviewApp, text)) {
+                alert('Спасибо за отзыв!');
+                closeReviewModal();
+                renderUserApps();
+            } else alert('Ошибка: возможно отзыв уже оставлен или курс не завершён');
+        } else alert('Введите текст отзыва');
+    }
+
+    // Админ панель
+    function renderAdminApps() {
+        let container = document.getElementById('adminContainer');
+        let apps = getAllApps();
+        let users = getUsers();
+        let search = document.getElementById('adminSearch')?.value.toLowerCase() || '';
+        let statusFilter = document.getElementById('adminStatusFilter')?.value || 'all';
+        apps = apps.filter(app => {
+            let user = users.find(u => u.id === app.userId);
+            let matchSearch = (user?.fullname.toLowerCase().includes(search) || app.courseName.toLowerCase().includes(search));
+            let matchStatus = statusFilter === 'all' || app.status === statusFilter;
+            return matchSearch && matchStatus;
+        });
+        if (!apps.length) { container.innerHTML = '<div class="empty">Нет заявок</div>'; return; }
+        container.innerHTML = apps.map(app => {
+            let user = users.find(u => u.id === app.userId);
+            let statusClass = app.status === 'Новая' ? 'status-new' : (app.status === 'Идет обучение' ? 'status-learning' : 'status-completed');
+            return `<div class="app-card">
+                        <div><strong>👤 Студент:</strong> ${user?.fullname} (${user?.login})</div>
+                        <div><strong>📚 Курс:</strong> ${app.courseName}</div>
+                        <div><strong>📅 Дата:</strong> ${app.startDate}</div>
+                        <div><strong>💳 Оплата:</strong> ${app.paymentMethod}</div>
+                        <div><strong>📊 Статус:</strong> <span class="status ${statusClass}">${app.status}</span></div>
+                        <div class="admin-actions">
+                            <select id="statusSel-${app.id}">
+                                <option value="Новая" ${app.status === 'Новая' ? 'selected' : ''}>Новая</option>
+                                <option value="Идет обучение" ${app.status === 'Идет обучение' ? 'selected' : ''}>Идет обучение</option>
+                                <option value="Обучение завершено" ${app.status === 'Обучение завершено' ? 'selected' : ''}>Обучение завершено</option>
+                            </select>
+                            <button onclick="window.updateAppStatus(${app.id})">Изменить</button>
+                        </div>
+                    </div>`;
+        }).join('');
+    }
+
+    window.updateAppStatus = function(id) {
+        let select = document.getElementById(`statusSel-${id}`);
+        updateStatus(id, select.value);
+        renderAdminApps();
+    };
+
+    // Слайдер
+    let slideIndex = 0, slideInterval;
+    function initSlider() {
+        let track = document.getElementById('sliderTrack');
+        let prev = document.getElementById('sliderPrev');
+        let next = document.getElementById('sliderNext');
+        let dots = document.getElementById('sliderDots');
+        let slides = document.querySelectorAll('.slide');
+        if (!track || !slides.length) return;
+        dots.innerHTML = '';
+        slides.forEach((_, i) => {
+            let dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dots.appendChild(dot);
+        });
+        function goToSlide(idx) {
+            slideIndex = (idx + slides.length) % slides.length;
+            track.style.transform = `translateX(-${slideIndex * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === slideIndex));
+        }
+        function nextSlide() { goToSlide(slideIndex + 1); }
+        function prevSlide() { goToSlide(slideIndex - 1); }
+        prev.addEventListener('click', prevSlide);
+        next.addEventListener('click', nextSlide);
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 3000);
+    }
+
+    // Тема
+    function initTheme() {
+        let isDark = localStorage.getItem('theme') === 'dark';
+        if (isDark) document.body.classList.add('dark');
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+    }
+
+    // ========== МОДАЛЬНЫЕ ОКНА ЛОГИНА / РЕГИСТРАЦИИ ==========
+    let loginModal, regModal;
+    function createAuthModals() {
+        loginModal = document.createElement('div');
+        loginModal.id = 'loginModal';
+        loginModal.className = 'modal';
+        loginModal.innerHTML = `<div class="modal-content"><span class="modal-close">&times;</span><h2>Вход</h2><input type="text" id="modalLogin" placeholder="Логин"><input type="password" id="modalPassword" placeholder="Пароль" style="margin-top:10px"><div id="modalLoginError" class="error-msg"></div><button id="modalDoLogin" class="btn btn-primary" style="margin-top:10px">Войти</button><p style="margin-top:10px">Нет аккаунта? <a href="#" id="openRegister">Регистрация</a></p></div>`;
+        document.body.appendChild(loginModal);
+
+        regModal = document.createElement('div');
+        regModal.id = 'regModal';
+        regModal.className = 'modal';
+        regModal.innerHTML = `<div class="modal-content"><span class="modal-close">&times;</span><h2>Регистрация</h2><input type="text" id="regLoginInp" placeholder="Логин (6+ символов)"><input type="password" id="regPassInp" placeholder="Пароль (8+)" style="margin-top:10px"><input type="text" id="regFullInp" placeholder="ФИО" style="margin-top:10px"><input type="text" id="regPhoneInp" placeholder="8(XXX)XXX-XX-XX" style="margin-top:10px"><input type="email" id="regEmailInp" placeholder="Email" style="margin-top:10px"><div id="regModalError" class="error-msg"></div><button id="modalDoReg" class="btn btn-primary" style="margin-top:10px">Зарегистрироваться</button><p style="margin-top:10px">Уже есть аккаунт? <a href="#" id="openLogin">Войти</a></p></div>`;
+        document.body.appendChild(regModal);
+
+        function closeModals() { loginModal.classList.remove('active'); regModal.classList.remove('active'); }
+        loginModal.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModals));
+        regModal.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModals));
+
+        document.getElementById('openRegister')?.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.remove('active'); regModal.classList.add('active'); });
+        document.getElementById('openLogin')?.addEventListener('click', (e) => { e.preventDefault(); regModal.classList.remove('active'); loginModal.classList.add('active'); });
+
+        document.getElementById('modalDoLogin')?.addEventListener('click', () => {
+            let res = loginUser(document.getElementById('modalLogin').value, document.getElementById('modalPassword').value);
+            if (res.ok) { closeModals(); updateUI(); showPage('home'); }
+            else document.getElementById('modalLoginError').innerText = res.error;
+        });
+        document.getElementById('modalDoReg')?.addEventListener('click', () => {
+            let res = register(
+                document.getElementById('regLoginInp').value,
+                document.getElementById('regPassInp').value,
+                document.getElementById('regFullInp').value,
+                document.getElementById('regPhoneInp').value,
+                document.getElementById('regEmailInp').value
+            );
+            if (res.ok) { alert('Регистрация успешна! Войдите.'); regModal.classList.remove('active'); loginModal.classList.add('active'); }
+            else document.getElementById('regModalError').innerText = res.error;
+        });
+    }
+
+    function bindNavWithAuth() {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                let page = link.dataset.page;
+                if (page === 'home') { showPage('home'); return; }
+                if (!localStorage.getItem('currentUser')) {
+                    e.preventDefault();
+                    loginModal.classList.add('active');
+                    return;
+                }
+                if (page === 'admin') {
+                    let user = JSON.parse(localStorage.getItem('currentUser'));
+                    if (user.role !== 'admin') {
+                        e.preventDefault();
+                        alert('Доступ запрещён');
+                        return;
+                    }
+                }
+                showPage(page);
+            });
+        });
+    }
+
+    // ========== ЗАПУСК ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        initStorage();
+        initTheme();
+        updateUI();
+        createAuthModals();
+        bindNavWithAuth();
+        initSlider();
+        showPage('home');
+
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('heroBtn').addEventListener('click', () => {
+            if (localStorage.getItem('currentUser')) showPage('new-application');
+            else loginModal.classList.add('active');
+        });
+
+        // Форма новой заявки
+        document.getElementById('applicationForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let saved = localStorage.getItem('currentUser');
+            if (!saved) { loginModal.classList.add('active'); return; }
+            let user = JSON.parse(saved);
+            let res = createApp(user.id, document.getElementById('courseSelect').value, document.getElementById('dateInput').value, document.querySelector('input[name="payment"]:checked')?.value);
+            if (res.ok) { alert('Заявка отправлена!'); document.getElementById('applicationForm').reset(); showPage('applications'); }
+            else alert(res.error);
+        });
+
+        // Модалка отзыва
+        let reviewModalEl = document.getElementById('reviewModal');
+        document.querySelector('#reviewModal .modal-close')?.addEventListener('click', () => reviewModalEl.classList.remove('active'));
+        document.getElementById('sendReviewBtn')?.addEventListener('click', submitReview);
+        window.addEventListener('click', (e) => { if (e.target === reviewModalEl) reviewModalEl.classList.remove('active'); });
+
+        // Админ фильтры
+        document.getElementById('adminSearch')?.addEventListener('input', renderAdminApps);
+        document.getElementById('adminStatusFilter')?.addEventListener('change', renderAdminApps);
+        document.getElementById('adminRefreshBtn')?.addEventListener('click', renderAdminApps);
+    });
+</script>
+</body>
+</html>
