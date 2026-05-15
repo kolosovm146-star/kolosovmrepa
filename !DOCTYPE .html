@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MobileStore — смартфоны и аксессуары</title>
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header & Nav */
+        header {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background-color: rgba(255,255,255,0.96);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1f2937;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .nav-links a:hover, .nav-links .active {
+            color: #2563eb;
+        }
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-icons button {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #2c3e66;
+            transition: 0.2s;
+        }
+        .nav-icons button:hover {
+            color: #2563eb;
+        }
+        .avatar-icon {
+            width: 36px;
+            height: 36px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1e40af;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Page sections */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .active-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* cards grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 28px;
+            margin: 40px 0;
+        }
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            transition: all 0.25s;
+            cursor: pointer;
+            border: 1px solid #eef2f6;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        }
+        .card-img {
+            background: #f8fafc;
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 5rem;
+        }
+        .card-info {
+            padding: 20px;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .card-price {
+            color: #2563eb;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+        .btn {
+            background: #2563eb;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+        }
+        .btn:hover {
+            background: #1e40af;
+        }
+
+        /* Карточка товара (детальная) */
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            margin: 40px 0;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+        .detail-img {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            font-size: 9rem;
+            background: #f1f5f9;
+            border-radius: 32px;
+            padding: 40px;
+        }
+        .detail-info {
+            flex: 2;
+        }
+        .specs-list {
+            list-style: none;
+            margin: 20px 0;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 24px;
+        }
+        .specs-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+        }
+        .back-catalog {
+            margin-bottom: 20px;
+            background: none;
+            border: none;
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* формы и личный кабинет */
+        .form-container {
+            max-width: 460px;
+            background: white;
+            margin: 40px auto;
+            padding: 32px;
+            border-radius: 32px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 60px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            margin: 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .avatar-large {
+            width: 100px;
+            height: 100px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+        }
+        .about-contacts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        .info-card {
+            flex: 1;
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid #eef2f6;
+            margin-top: 40px;
+            color: #5b6e8c;
+        }
+        hr {
+            margin: 16px 0;
+        }
+        @media (max-width: 720px) {
+            .navbar {
+                flex-direction: column;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo"><h2>📱 MobileStore</h2></div>
+            <ul class="nav-links">
+                <li><a href="#" data-page="home" class="nav-link active">Главная</a></li>
+                <li><a href="#" data-page="catalog" class="nav-link">Каталог</a></li>
+                <li><a href="#" data-page="about" class="nav-link">О нас</a></li>
+                <li><a href="#" data-page="contacts" class="nav-link">Контакты</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button id="openAuthBtn" title="Вход / Регистрация"><i class="fas fa-user-circle"></i></button>
+                <div id="avatarBtn" class="avatar-icon" style="display: none;">👤</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <!-- ======================= ГЛАВНАЯ ======================= -->
+    <div id="homePage" class="page active-page">
+        <section style="text-align: center; margin: 40px 0 20px;">
+            <h1>📱 Смартфоны и аксессуары</h1>
+            <p style="color: #475569;">Лучшие цены, оригинальная техника, быстрая доставка</p>
+        </section>
+        <div class="products-grid" id="featuredProducts"></div>
+        <div style="text-align: center;"><button class="btn" data-page="catalog" id="toCatalogBtn">Смотреть весь каталог →</button></div>
+    </div>
+
+    <!-- ======================= КАТАЛОГ ======================= -->
+    <div id="catalogPage" class="page">
+        <h2 style="margin: 30px 0 10px;">📦 Весь каталог</h2>
+        <div class="products-grid" id="catalogGrid"></div>
+    </div>
+
+    <!-- ======================= КАРТОЧКА ТОВАРА (динамическая) ======================= -->
+    <div id="productDetailPage" class="page">
+        <button class="back-catalog" id="backToCatalogFromDetail"><i class="fas fa-arrow-left"></i> Вернуться в каталог</button>
+        <div id="productDetailContainer"></div>
+    </div>
+
+    <!-- ======================= РЕГИСТРАЦИЯ / АВТОРИЗАЦИЯ (один блок с переключением) ======================= -->
+    <div id="authPage" class="page">
+        <div class="form-container" id="authFormsContainer">
+            <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                <button id="showLoginBtn" class="btn" style="background: #eef2ff; color:#1e40af;">Вход</button>
+                <button id="showRegisterBtn" class="btn btn-outline">Регистрация</button>
+                <button id="closeAuthBtn" style="margin-left: auto; background: none; border: none; font-size: 1.4rem; cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <!-- Форма входа -->
+            <div id="loginFormDiv">
+                <h3>Авторизация</h3>
+                <div class="form-group"><input type="email" id="loginEmail" placeholder="Email" value="demo@shop.ru"></div>
+                <div class="form-group"><input type="password" id="loginPass" placeholder="Пароль" value="123456"></div>
+                <button class="btn" id="doLoginBtn">Войти</button>
+                <p style="margin-top: 16px; font-size: 0.85rem;">🔐 Тестовый: demo@shop.ru / 123456</p>
+            </div>
+            <!-- Форма регистрации (изначально скрыта) -->
+            <div id="registerFormDiv" style="display: none;">
+                <h3>Регистрация</h3>
+                <div class="form-group"><input type="text" id="regName" placeholder="Имя пользователя"></div>
+                <div class="form-group"><input type="email" id="regEmail" placeholder="Email"></div>
+                <div class="form-group"><input type="password" id="regPass" placeholder="Пароль"></div>
+                <button class="btn" id="doRegisterBtn">Зарегистрироваться</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= ЛИЧНЫЙ КАБИНЕТ ======================= -->
+    <div id="profilePage" class="page">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 24px 0;">
+            <h2>Личный кабинет</h2>
+            <button id="logoutProfileBtn" class="btn-outline btn" style="width: auto;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+        <div class="profile-card" id="profileCard">
+            <!-- динамическая аватарка и информация -->
+        </div>
+        <div class="info-card"><i class="fas fa-history"></i> История заказов: пока пусто, но вы авторизованы!</div>
+    </div>
+
+    <!-- ======================= О НАС ======================= -->
+    <div id="aboutPage" class="page">
+        <div class="about-contacts">
+            <div class="info-card"><i class="fas fa-store" style="font-size: 2rem;"></i><h3>О компании</h3><p>MobileStore — надежный продавец смартфонов и аксессуаров с 2020 года. Только оригинальная продукция и гарантия 12 месяцев.</p></div>
+            <div class="info-card"><i class="fas fa-truck"></i><h3>Доставка</h3><p>По всей России курьером и в пункты выдачи. Отправка в день заказа!</p></div>
+        </div>
+    </div>
+
+    <!-- ======================= КОНТАКТЫ ======================= -->
+    <div id="contactsPage" class="page">
+        <div class="about-contacts">
+            <div class="info-card"><i class="fas fa-phone-alt"></i><h3>Контакты</h3><p>📞 +7 (800) 555-35-35<br>✉️ support@mobilestore.ru<br>📍 Москва, ул. Технологическая, 12</p></div>
+            <div class="info-card"><i class="fas fa-clock"></i><h3>Режим работы</h3><p>Пн-Пт: 10:00 – 20:00<br>Сб-Вс: 11:00 – 18:00</p></div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">© 2025 MobileStore — Смартфоны и аксессуары. Все права защищены.</div>
+</footer>
+
+<script>
+    // ---------- ТОВАРЫ (смартфоны + аксессуары) ----------
+    const products = [
+        { id: 1, name: "iPhone 15 Pro", price: "99 990 ₽", category: "phone", imgIcon: "📱", specs: "6.1″ Super Retina, A17 Pro, 256GB,钛金属" },
+        { id: 2, name: "Samsung Galaxy S24 Ultra", price: "112 490 ₽", category: "phone", imgIcon: "📲", specs: "6.8″ Dynamic AMOLED, Snapdragon 8 Gen 3, 12/512GB, S Pen" },
+        { id: 3, name: "Xiaomi 14 Pro", price: "79 990 ₽", category: "phone", imgIcon: "📱", specs: "6.73″ AMOLED, Snapdragon 8 Gen 3, 12/512GB, Leica camera" },
+        { id: 4, name: "Наушники AirPods Pro 2", price: "24 990 ₽", category: "accessory", imgIcon: "🎧", specs: "Активное шумоподавление, чип H2, пространственное аудио" },
+        { id: 5, name: "Беспроводная зарядка MagSafe", price: "5 490 ₽", category: "accessory", imgIcon: "⚡", specs: "15W быстрая зарядка, совместимость с iPhone и Android" },
+        { id: 6, name: "Чехол-книжка для iPhone 15", price: "2 290 ₽", category: "accessory", imgIcon: "📘", specs: "Эко-кожа, магнитная защелка, подставка" },
+        { id: 7, name: "Google Pixel 8 Pro", price: "84 990 ₽", category: "phone", imgIcon: "🤖", specs: "6.7″ OLED, Tensor G3, 128GB, камера 50MP" }
+    ];
+
+    // Глобальное состояние
+    let currentUser = null;   // { name, email, avatarInitial }
+    let selectedProductId = null;
+    
+    // DOM элементы
+    const pages = {
+        home: document.getElementById('homePage'),
+        catalog: document.getElementById('catalogPage'),
+        productDetail: document.getElementById('productDetailPage'),
+        auth: document.getElementById('authPage'),
+        profile: document.getElementById('profilePage'),
+        about: document.getElementById('aboutPage'),
+        contacts: document.getElementById('contactsPage')
+    };
+
+    function showPage(pageId) {
+        Object.keys(pages).forEach(key => pages[key].classList.remove('active-page'));
+        pages[pageId].classList.add('active-page');
+        // Если каталог — рендерим сетку
+        if (pageId === 'catalog') renderCatalogGrid();
+        if (pageId === 'home') renderFeaturedProducts();
+        if (pageId === 'profile' && currentUser) renderProfile();
+        if (pageId === 'productDetail' && selectedProductId) renderProductDetail(selectedProductId);
+    }
+
+    // Рендер главной (3 товара)
+    function renderFeaturedProducts() {
+        const container = document.getElementById('featuredProducts');
+        const featured = products.slice(0, 3);
+        container.innerHTML = featured.map(p => `
+            <div class="product-card" data-id="${p.id}">
+                <div class="card-img">${p.imgIcon}</div>
+                <div class="card-info">
+                    <div class="card-title">${p.name}</div>
+                    <div class="card-price">${p.price}</div>
+                    <button class="btn view-detail" data-id="${p.id}">Подробнее</button>
+                </div>
+            </div>
+        `).join('');
+        attachDetailEvents();
+    }
+
+    function renderCatalogGrid() {
+        const container = document.getElementById('catalogGrid');
+        container.innerHTML = products.map(p => `
+            <div class="product-card" data-id="${p.id}">
+                <div class="card-img">${p.imgIcon}</div>
+                <div class="card-info">
+                    <div class="card-title">${p.name}</div>
+                    <div class="card-price">${p.price}</div>
+                    <button class="btn view-detail" data-id="${p.id}">Подробнее</button>
+                </div>
+            </div>
+        `).join('');
+        attachDetailEvents();
+    }
+
+    function attachDetailEvents() {
+        document.querySelectorAll('.view-detail').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                selectedProductId = id;
+                renderProductDetail(id);
+                showPage('productDetail');
+            });
+        });
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.classList.contains('view-detail')) return;
+                const id = parseInt(card.dataset.id);
+                if (id) {
+                    selectedProductId = id;
+                    renderProductDetail(id);
+                    showPage('productDetail');
+                }
+            });
+        });
+    }
+
+    function renderProductDetail(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+        const container = document.getElementById('productDetailContainer');
+        container.innerHTML = `
+            <div class="product-detail">
+                <div class="detail-img">${product.imgIcon}</div>
+                <div class="detail-info">
+                    <h2>${product.name}</h2>
+                    <p style="font-size: 1.8rem; font-weight: 700; color:#2563eb;">${product.price}</p>
+                    <ul class="specs-list">
+                        <li><i class="fas fa-microchip"></i> <strong>Характеристики:</strong> ${product.specs}</li>
+                        <li><i class="fas fa-box"></i> Категория: ${product.category === 'phone' ? 'Смартфон' : 'Аксессуар'}</li>
+                        <li><i class="fas fa-shield-alt"></i> Гарантия: 1 год</li>
+                    </ul>
+                    <button class="btn" id="buyFromDetail">Добавить в корзину (демо)</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('buyFromDetail')?.addEventListener('click', () => alert('Товар добавлен в корзину (деморежим)'));
+    }
+
+    // ----- АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ (обработка) -----
+    function updateAuthUI() {
+        const authBtn = document.getElementById('openAuthBtn');
+        const avatarDiv = document.getElementById('avatarBtn');
+        if (currentUser) {
+            authBtn.style.display = 'none';
+            avatarDiv.style.display = 'flex';
+            avatarDiv.innerHTML = currentUser.avatarInitial || currentUser.name.charAt(0).toUpperCase();
+            avatarDiv.title = `${currentUser.name} (личный кабинет)`;
+        } else {
+            authBtn.style.display = 'flex';
+            avatarDiv.style.display = 'none';
+        }
+    }
+
+    function renderProfile() {
+        if (!currentUser) return;
+        const container = document.getElementById('profileCard');
+        container.innerHTML = `
+            <div class="avatar-large">${currentUser.avatarInitial || currentUser.name.charAt(0).toUpperCase()}</div>
+            <div><h3>${currentUser.name}</h3><p><i class="fas fa-envelope"></i> ${currentUser.email}</p><p>Телефон: +7 999 123-45-67 (демо)</p></div>
+        `;
+    }
+
+    function doLogin(email, password) {
+        // тестовая проверка
+        if (email === "demo@shop.ru" && password === "123456") {
+            currentUser = { name: "Алексей Демо", email: "demo@shop.ru", avatarInitial: "А" };
+            localStorage.setItem("mobilestore_user", JSON.stringify(currentUser));
+            updateAuthUI();
+            showPage('profile');
+            renderProfile();
+            return true;
+        } else {
+            alert("Неверный email или пароль. Используйте demo@shop.ru / 123456");
+            return false;
+        }
+    }
+
+    function doRegister(name, email, password) {
+        if (!name || !email || !password) {
+            alert("Заполните все поля");
+            return false;
+        }
+        currentUser = { name: name, email: email, avatarInitial: name.charAt(0).toUpperCase() };
+        localStorage.setItem("mobilestore_user", JSON.stringify(currentUser));
+        updateAuthUI();
+        showPage('profile');
+        renderProfile();
+        return true;
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem("mobilestore_user");
+        updateAuthUI();
+        showPage('home');
+        alert("Вы вышли из аккаунта");
+    }
+
+    // Переключение вкладок в auth (логин/регистрация)
+    const loginDiv = document.getElementById('loginFormDiv');
+    const registerDiv = document.getElementById('registerFormDiv');
+    document.getElementById('showLoginBtn').addEventListener('click', () => {
+        loginDiv.style.display = 'block';
+        registerDiv.style.display = 'none';
+        document.getElementById('showLoginBtn').style.background = '#eef2ff';
+        document.getElementById('showRegisterBtn').style.background = 'transparent';
+    });
+    document.getElementById('showRegisterBtn').addEventListener('click', () => {
+        loginDiv.style.display = 'none';
+        registerDiv.style.display = 'block';
+        document.getElementById('showRegisterBtn').style.background = '#eef2ff';
+        document.getElementById('showLoginBtn').style.background = 'transparent';
+    });
+    document.getElementById('doLoginBtn').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        if (doLogin(email, pass)) showPage('profile');
+    });
+    document.getElementById('doRegisterBtn').addEventListener('click', () => {
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+        if (doRegister(name, email, pass)) showPage('profile');
+    });
+    document.getElementById('closeAuthBtn').addEventListener('click', () => {
+        showPage('home');
+    });
+    document.getElementById('logoutProfileBtn')?.addEventListener('click', () => logout());
+    
+    // Кнопка аватар -> личный кабинет
+    document.getElementById('avatarBtn').addEventListener('click', () => {
+        if (currentUser) { showPage('profile'); renderProfile(); }
+        else { showPage('auth'); }
+    });
+    document.getElementById('openAuthBtn').addEventListener('click', () => { showPage('auth'); });
+    
+    // Навигация по ссылкам и возможность вернуться назад
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = link.dataset.page;
+            if (pageId === 'home') showPage('home');
+            else if (pageId === 'catalog') showPage('catalog');
+            else if (pageId === 'about') showPage('about');
+            else if (pageId === 'contacts') showPage('contacts');
+            // Активная ссылка визуально
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+    document.getElementById('toCatalogBtn')?.addEventListener('click', () => showPage('catalog'));
+    document.getElementById('backToCatalogFromDetail')?.addEventListener('click', () => showPage('catalog'));
+    
+    // Восстановление сессии из localStorage
+    const savedUser = localStorage.getItem("mobilestore_user");
+    if (savedUser) {
+        try {
+            currentUser = JSON.parse(savedUser);
+            updateAuthUI();
+        } catch(e) {}
+    }
+    
+    // Инициализация: рендер главной и каталог по умолчанию
+    renderFeaturedProducts();
+    renderCatalogGrid();
+    updateAuthUI();
+    if (currentUser) renderProfile();
+    
+    // Доп. бек для кнопки назад (history api необязательно, но пользователь может вернуться через меню). Реализована возможность вернуться "назад" во всех формах через кнопки интерфейса.
+</script>
+</body>
+</html>
